@@ -45,8 +45,9 @@ impl KMeans {
 
     pub fn print_logs(&self) {
         for log in self.iteration_logs.iter() {
-            println!("{:#?}", log);
+            println!("{:?}", log);
         }
+        println!()
     }
 
     fn reset(&mut self) {
