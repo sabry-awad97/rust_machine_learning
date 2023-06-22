@@ -1,4 +1,4 @@
-type Point = Vec<f64>;
+pub type Point = Vec<f64>;
 
 fn mean(numbers: &[f64]) -> f64 {
     numbers.iter().sum::<f64>() / numbers.len() as f64
