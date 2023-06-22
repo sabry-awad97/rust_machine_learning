@@ -1,20 +1,26 @@
+use std::error::Error;
+
 use data::EXAMPLE_2D3K;
 
 use k_means::KMeans;
 
 use crate::{
     data::{EXAMPLE_2DNK, EXAMPLE_3D3K},
+    plotter::{plot_3d_data, DataPlotter},
     solver::KMeansAutoSolver,
 };
 
 mod data;
 mod k_means;
+mod plotter;
 mod solver;
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     println!("Solution for 2d data with 3 clusters:");
     println!("-------------------------------------");
     let data: Vec<_> = EXAMPLE_2D3K.into_iter().map(|row| row.to_vec()).collect();
+    let plotter = DataPlotter::new("plot_2d3k.png", &data);
+    plotter.plot()?;
     let mut ex_1_solver = KMeans::new(3, data);
     let ex_1_centroids = ex_1_solver.solve(10000);
     println!("{:?}\n", ex_1_centroids);
@@ -35,6 +41,7 @@ fn main() {
     println!("Solution for 3d data with 3 clusters:");
     println!("-------------------------------------");
     let data: Vec<_> = EXAMPLE_3D3K.into_iter().map(|row| row.to_vec()).collect();
+    plot_3d_data("plot_3d3k.png", &data)?;
     let mut ex_2_solver = KMeans::new(3, data);
     let ex_2_centroids = ex_2_solver.solve(10000);
     println!("{:?}\n", ex_2_centroids);
@@ -57,5 +64,7 @@ fn main() {
     let data: Vec<_> = EXAMPLE_2DNK.into_iter().map(|row| row.to_vec()).collect();
     let mut ex_3_solver = KMeansAutoSolver::new(1, 5, 5, data);
     let ex_3_solution = ex_3_solver.solve(10000);
-    println!("{:?}", ex_3_solution.unwrap());
+    println!("{:?}", ex_3_solution.ok_or("No solution"));
+
+    Ok(())
 }
